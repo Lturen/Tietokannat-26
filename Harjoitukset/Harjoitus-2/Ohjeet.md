@@ -36,13 +36,13 @@ Alleviivaa substantiivit skenaariosta ja listaa ehdokasentiteetit alle:
 
 **Ehdokasentiteetit:**
 
-*
-*
-*
-*
-*
-*
-*
+*Kirja
+*Kustantaja
+*Kirjoittaja
+*Jäsen
+*Laina
+*Toimipiste
+*Kopio
 
 ---
 
@@ -52,14 +52,14 @@ Valitse lopulliset entiteetit ja määrittele kukin yhdellä lauseella.
 
 | Entiteetti | Yhden lauseen määritelmä |
 | ---------- | ------------------------ |
-|            |                          |
-|            |                          |
-|            |                          |
-|            |                          |
-|            |                          |
-|            |                          |
-|            |                          |
-
+|  Jäsen     |Kirjautunut kirjaston järjestelmään|
+| Toimipiste |Fyysinen sijainti kirjoille                    |
+| Laina      | Käyttäjän tekemä lainaus materiaalista                         |
+| Julkaisija | Organisaatio joka on julkaissut kirjan                       |
+| Kirjoittaja|Henkilö kuka on kirjoittanut kirjan                       |
+| Kopio      |Fyysinen kirjallisuus kirjastossa                        |
+| Kirja      | Abstrakti olio, esim id, hyllykkö ym.                         |
+toimipiste   | Fyysinen kirjaston lokaatio
 ---
 
 ### **Vaihe 3 — Pääavainten valinta (tunnisteet)**
@@ -68,19 +68,21 @@ Ehdota kullekin entiteetille pääavain.
 
 | Entiteetti | Pääavain (PK) |
 | ---------- | ------------- |
-|            |               |
-|            |               |
-|            |               |
-|            |               |
-|            |               |
-|            |               |
-|            |               |
+| Kirja           | Kirja_id              |
+| Kustantaja      | Kustantaja_id              |
+| Kirjoittaja     | Kirjoittaja_id              |
+| Jäsen           | jäsen_id              |
+| Kopio           | kopio_id              |
+| Lainaus         | lainaus_id              |
+| Toimipiste      | toimiåiste_id              |
 
 > 💬 Pohdinta: Miksi nimet tai otsikot eivät yleensä ole hyviä pääavaimia?
 >
 > Vastauksesi:
 
----
+---Nimet voivat toistua liian usein ja otsikot eivat kerro esim mikä kirja on kyseessä.
+oma päätelmä tossa
+saatan olla väärässäkin
 
 ### **Vaihe 4 — Keskeisten attribuuttien lisääminen**
 
@@ -88,50 +90,52 @@ Listaa keskeiset attribuutit vaatimuksista (älä yli-analysoi — sisällytä v
 
 #### (kirjoita entiteetin nimi tähän)
 
-* PK:
+* PK: kirja_id
 * ## Muut attribuutit:
 
-  *
+  * nimi
+  * julkaisuvuosi
 
-#### (kirjoita entiteetin nimi tähän)
-
-* PK:
+* PK: kustantaja_id
 * ## Muut attribuutit:
 
+  * kirja
   *
 
-#### (kirjoita entiteetin nimi tähän)
+#### (kirjoittaja)
 
-* PK:
+* PK: kirjoittaja_id
 * ## Muut attribuutit:
 
-  *
-  *
+  * kirja
 
-#### (kirjoita entiteetin nimi tähän)
-
-* PK:
+* PK: jäsen_id
 * ## Muut attribuutit:
 
-#### (kirjoita entiteetin nimi tähän)
+* nimi
+* sähköposti
+* liittymispäivä
 
-* PK:
+#### (kopio)
+
+* PK: kopio_id
 * ## Muut attribuutit:
 
-#### (kirjoita entiteetin nimi tähän)
+* nimi
+* julkaisuvuosi
 
-* PK:
+* PK: lainaus_id
 * ## Muut attribuutit:
 
-  *
+  * lainauspäivä
+  * palautuspäivä
+  * eräpäivä
 
-#### (kirjoita entiteetin nimi tähän)
-
-* PK:
+* PK: toimipiste_id
 * ## Muut attribuutit:
 
-  *
-  *
+  * nimi
+  * osoite
 
 ---
 
@@ -139,11 +143,11 @@ Listaa keskeiset attribuutit vaatimuksista (älä yli-analysoi — sisällytä v
 
 Kirjoita suhteet muodossa: **Entiteetti — verbi — Entiteetti**
 
-*
-*
-*
-*
-*
+* Kirja on toimipisteellä.
+* Jäsen lainaa kirjan.
+* Jäsen palauttaa kirjan.
+* Kustantaja kustantaa kirjan.
+* Kirjoittaja kirjoittaaa kirjan
 
 ---
 
@@ -151,13 +155,14 @@ Kirjoita suhteet muodossa: **Entiteetti — verbi — Entiteetti**
 
 Täytä alla oleva taulukko.
 
-| Suhde | Kardinaliteetti | Perustelu (lyhyesti) |
-| ----- | --------------- | -------------------- |
-|       |                 |                      |
-|       |                 |                      |
-|       |                 |                      |
-|       |                 |                      |
-|       |                 |                      |
+
+| Suhde    | Kardinaliteetti | Perustelu (lyhyesti) |
+| -----    | --------------- | -------------------- |
+|Kirja     | Kirjasto        |Kirjastossa on paljon kirjoja  |
+|Lainaus   | Toimipiste      |Lainataan paljon toimipisteellä|
+|kirjailija| Kirja        |Kirjailija kirjoittaa kirjoja  |
+|opiskelija| Koulu        |Opiskelijat opiskelee koulussa |
+|Lehmä     | maito        |lehmät tuottavat maitoa        |
 
 ---
 
@@ -167,28 +172,30 @@ Vastaa seuraaviin kysymyksiin:
 
 1. **Pitääkö jokaisella kirjalla olla kustantaja?**
 
-   * [ ] Kyllä (pakollinen) [ ] Ei (valinnainen)
-   * Miksi?
+   * [x] Kyllä (pakollinen) [ ] Ei (valinnainen)
+   * Pitää olla yksi, tai useampi on myös mahdollista.
 
 2. **Voiko kustantaja olla olemassa ilman yhtään kirjaa?**
 
-   * [ ] Kyllä [ ] Ei
-   * Miksi?
+   * [x] Kyllä [ ] Ei
+   * Miksi? Kustantajalla voi olla monta kirjaa. Mutta ei mainita pitääkö kustantajalla olla kirjoja. 
+   Joten kirjattomat kustantajat ovat mahdollisia
+
 
 3. **Pitääkö jokaisella kirjalla olla vähintään yksi kirjoittaja?**
 
-   * [ ] Kyllä [ ] Ei
-   * Miksi?
+   * [x] Kyllä [ ] Ei
+   * Miksi? kirjalla voi olla yksi tai useampi. joten kaikilla kirjoilla tulee olla ainakin yksi kirjoittaja
 
 4. **Pitääkö jokaisen kirjan kopion kuulua johonkin toimipisteeseen?**
 
-   * [ ] Kyllä [ ] Ei
-   * Miksi?
+   * [x] Kyllä [ ] Ei
+      * Miksi? Jokainen fyysinen kirjan kopio kuuluu täsmälleen yhteen toimipisteeseen.
 
 5. **Onko palautuspäivä pakollinen vai valinnainen Lainauksessa?**
 
-   * [ ] Pakollinen [ ] Valinnainen
-   * Miksi?
+   * [ ] Pakollinen [x] Valinnainen
+   * * Miksi? Palautuspäivä voi olla tyhjä
 
 ---
 
@@ -221,7 +228,7 @@ Käytä tätä tilaa (tai erillistä paperia):
 [ Lisää ER-kaaviosi tähän ]
 ```
 
----
+---![Tietokannat ER-Kaavio](Tietokannat\Tietokannat-26\Harjoitukset\Harjoitus-2\ER_kaavio_tietokannat_kurssi_tehtava_2.png")
 
 ### **Vaihe 9 — Lisää relaatiot**
 
