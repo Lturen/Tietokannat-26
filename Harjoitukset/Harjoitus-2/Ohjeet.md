@@ -228,7 +228,7 @@ Käytä tätä tilaa (tai erillistä paperia):
 [ Lisää ER-kaaviosi tähän ]
 ```
 
----![Tietokannat ER-Kaavio](Tietokannat\Tietokannat-26\Harjoitukset\Harjoitus-2\ER_kaavio_tietokannat_kurssi_tehtava_2.png")
+---![Tietokannat ER-Kaavio](Tietokannat\Tietokannat-26\Harjoitukset\Harjoitus-2\ER kaavio\Nayttokuva_2026-01-26_191943.png)
 
 ### **Vaihe 9 — Lisää relaatiot**
 
@@ -253,25 +253,31 @@ Merkitse ✔ tai ✘ ja selitä lyhyesti.
 
 1. Voiko jäsen lainata useita kirjoja ajan myötä?
 
-   * [ ] Kyllä [ ] Ei
+   * [ x] Kyllä [ ] Ei
    * Miksi?
+   Miksi? Jäsen–Lainaus -suhde on 1:N, joten yhdellä jäsenellä voi olla useita lainauksia eri aikoina.
 
 2. Voiko samaa kirjakappaletta lainata useita kertoja eri kuukausina?
 
-   * [ ] Kyllä [ ] Ei
+   * [x ] Kyllä [ ] Ei
    * Miksi?
+   Kyllä kirjan ja kopion suhde on 1:N
 
 3. Voiko kirjalla olla useita kirjoittajia?
 
-   * [ ] Kyllä [ ] Ei
+   * [x] Kyllä [ ] Ei
    * Miksi?
+   Miksi? Kirja–Kirjailija -suhde on M:N, jolloin kirjalla voi olla useampi kirjoittaja ja kirjoittaja voi kirjoittaa useita kirjoja.
 
 4. Voiko kirja olla olemassa ilman kustantajaa?
 
    * [ ] Kyllä [ ] Ei
    * Miksi?
+   Kyllä, koska Kirjan ja julkaisijan suhde on valinnainen
+   
 
 5. Voiko lainauksella olla tyhjä return_date?
 
    * [ ] Kyllä [ ] Ei
    * Miksi?
+   Koska Palautuspäivä on valinnainen atribuutti
