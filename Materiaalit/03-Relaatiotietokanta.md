@@ -3,14 +3,14 @@
 
 [IBM: What is a relational dabase?](https://www.ibm.com/think/topics/relational-databases#228874317)
 
-Relaatiotietokanta (Relational Database) on tapa järjestää tietoa niin, että se tuntuu vähemmän kaoottiselta muistiinpanokasalta ja enemmän hyvin järjestetyltä kirjastolta.  
+Relaatiotietokanta (Relational Database) on tapa järjestää tietoa niin, että se tuntuu vähemmän kaoottiselta muistiinpanokasalta ja enemmän järjestetyltä kirjastolta.  
 Sen sijaan, että tieto tallennettaisiin ”kaikki kaikkialle”, relaatiotietokanta tallentaa tiedon **tauluihin** (tables), jotka voidaan **liittää** (linked) toisiinsa huolellisesti määriteltyjen sääntöjen avulla.
 
 Perustaltaan se pohjautuu **relaatiomalliin** (relational model), jonka esitteli **E. F. Codd**. Malli käsittelee tietoa relaatioiden (taulujen) joukkona ja käyttää logiikkaan perustuvia operaatioita niiden käsittelemiseen.
 
 ### Keskeinen idea
 
-Relaatiotietokanta kysyy:
+Relaatiotietokanta kysyy:::::::::::
 
 > ”Mitkä ovat maailmamme _asiat_, mitkä ovat niiden _ominaisuudet_, ja miten ne ovat _yhteydessä_ toisiinsa?”
 
@@ -18,7 +18,7 @@ Koulujärjestelmässä:
 
 - Asiat (Things): **Oppilaat (Students)**, **Kurssit (Courses)**, **Opettajat (Teachers)**
     
-- Ominaisuudet (Properties): oppilaan nimi, kurssin nimi jne.
+- Ominaisuudet (Properties): oppilaan nimi, kurssin nimi jne..............
     
 - Yhteydet (Connections): oppilaat ilmoittautuvat kursseille, opettajat opettavat kursseja
     

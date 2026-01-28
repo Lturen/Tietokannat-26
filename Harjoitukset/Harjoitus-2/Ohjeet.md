@@ -257,7 +257,7 @@ Merkitse ✔ tai ✘ ja selitä lyhyesti.
    * Miksi?
    Miksi? Jäsen–Lainaus -suhde on 1:N, joten yhdellä jäsenellä voi olla useita lainauksia eri aikoina.
 
-2. Voiko samaa kirjakappaletta lainata useita kertoja eri kuukausina?
+2. Voiko samaa kirjakappaletta lainata useita kertoja eri kuukausina??????
 
    * [x ] Kyllä [ ] Ei
    * Miksi?
