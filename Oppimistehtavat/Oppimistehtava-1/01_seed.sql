@@ -18,4 +18,6 @@ INSERT INTO products (name, price, stock, category_id) VALUES
 ('Stainless Steel Water Bottle 1L', 19.90, 90, 4),
 ('Merino Wool Base Layer Top', 64.00, 45, 5),
 ('RainShell Waterproof Jacket', 119.00, 22, 5),
-('Thermal Hiking Socks (2-Pack)', 14.99, 120, 5);
+('Thermal Hiking Socks (2-Pack)', 14.99, 120, 5),
+('Lampopeitto ', 2000, 5, 1);
+--Tuotteiden lisäys loppuu puolipisteeseen;!

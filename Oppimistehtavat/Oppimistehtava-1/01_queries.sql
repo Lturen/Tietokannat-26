@@ -1,4 +1,4 @@
--- 1. Kaikki kategoriat
+-- 1. Suodattaa kaikki kategoriat
 SELECT * FROM categories;
 
 -- 2. Kaikki tuotteet
@@ -12,3 +12,6 @@ SELECT * FROM products WHERE price > 50;
 
 -- 5. Tuotteet kalleimmasta halvimpaan
 SELECT name, price FROM products ORDER BY price DESC;
+
+--6. Tuotteet, joiden hinta on yli 100
+SELECT * FROM products WHERE price > 100;
