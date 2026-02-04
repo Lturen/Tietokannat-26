@@ -1,8 +1,8 @@
 -- Luodaan kategoriataulu
 CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,              -- Automaattinen ID:n syöttö
-    name VARCHAR(100) NOT NULL UNIQUE   -- Nimi ei voi olla tyhjä ja sen täytyy olla uniikki
-                                        --VARCHAR eli string, max pituus 100 merkkiä
+    id SERIAL PRIMARY KEY,              -- Automaattinen ID:n syöttö.
+    name VARCHAR(100) NOT NULL UNIQUE   -- Nimi ei voi olla tyhjä ja sen täytyy olla uniikki.
+                                        --VARCHAR eli string, max pituus 100 merkkiä.
 );
 
 -- Luodaan tuotetaulu

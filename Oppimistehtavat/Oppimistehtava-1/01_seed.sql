@@ -2,7 +2,7 @@
 INSERT INTO categories (name) VALUES 
 ('Tents'), ('Backpacks'), ('Sleeping Gear'), ('Hiking Accessories'), ('Outdoor Clothing');
 
--- Lisätään 15 tuotetta (Category_id vastaa yllä olevaa järjestystystä)
+-- Lisätään 15 tuotetta (Category_id vastaa yllä olevaa järjestystystä)))
 INSERT INTO products (name, price, stock, category_id) VALUES 
 ('Summit 2P Dome Tent', 149.99, 25, 1),
 ('TrailLite 1P Tent', 119.50, 12, 1),
@@ -19,5 +19,7 @@ INSERT INTO products (name, price, stock, category_id) VALUES
 ('Merino Wool Base Layer Top', 64.00, 45, 5),
 ('RainShell Waterproof Jacket', 119.00, 22, 5),
 ('Thermal Hiking Socks (2-Pack)', 14.99, 120, 5),
-('Lampopeitto ', 2000, 5, 1);
+('Lampopeitto ', 2000, 5, 1),
+('Makuupussi ', 150, 10, 3),
+('Retkikeitin ', 80, 15, 4),
 --Tuotteiden lisäys loppuu puolipisteeseen;!
