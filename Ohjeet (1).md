@@ -49,21 +49,57 @@ Luo seuraavat taulut **riippuvuusjärjestyksessä** (ensin viitatut taulut). Kä
 
 ```sql
 -- books
+--Luon taulun books
+CREATE TABLE BOOKS (
+    book_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     title VARCHAR(300) NOT NULL, isbn VARCHAR(20) UNIQUE, publication_year INTEGER CHECK (publication_year BETWEEN 1000 AND 2100)
+);
+
 
 
 -- authors
+-- Luon taulun authors
+CREATE TABLE AUTHORS (
+    author_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, full_name VARCHAR(100) NOT NULL
+);
 
 
 -- book_authors
+-- Luon taulun BOOK AUTHORS
+CREATE TABLE BOOK_AUTHORS (
+    book_id INTEGER NOT NULL REFERENCES books(book_id), 
+    author_id INTEGER NOT NULL REFERENCES authors(author_id), PRIMARY KEY (book_id, author_id)
+);
 
 
 -- members
+--Luon taulun BEMBERS
+CREATE TABLE MEMBERS (
+    member_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, full_name VARCHAR(100) NOT NULL, 
+    email VARCHAR(255) UNIQUE
+);
 
 
 -- loans
+--Luon taulun LOANS
+CREATE TABLE LOANS (
+    loan_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+    book_id INTEGER NOT NULL REFERENCES books(book_id), 
+    member_id INTEGER NOT NULL REFERENCES members(member_id), 
+    loan_date DATE NOT NULL,
+    due_date DATE NOT NULL, 
+    return_date DATE (nullable)
+);
 
 
 -- fines
+-- Luon taulun FINES
+CREATE TABLE FINES (
+    fine_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+    loan_id INTEGER NOT NULL REFERENCES loans(loan_id), 
+    amount NUMERIC(6,2) NOT NULL CHECK (amount >= 0), 
+    paid BOOLEAN NOT NULL DEFAULT FALSE
+);
 
 ```
 
@@ -137,21 +173,52 @@ Lisää alla olevat rivit jokaiseen tauluun. **Älä sisällytä identity-sarakk
 
 ```sql
 -- books
+INSERT INTO books (title, isbn, published_year) VALUES
+( 'The Great Novel', 978-0-00-000001-1, 2020),
+( 'Databases' 101, 978-0-00-000002-2, 2019),
+( 'Web Development', _(NULL)_, 2021),
+( 'Algorithms', 978-0-00-000004-4, 2018);
 
 
 -- authors
+INSERT INTO authors (full_name) VALUES
+('Jane Smith'),
+('Mika Virtanen'),
+('Aino Laine');
 
 
 -- book_authors
-
+INSERT INTO book_authors (book_id, author_id) VALUES
+(1, 1),
+(1, 2),
+(2, 1),
+(2, 3),
+(3, 2),
+(3, 3),
+(4, 3);
 
 -- members
-
+INSERT INTO members (full_name, email) VALUES
+('Aino Laine', 'aino@library.fi'),
+('Mika Virtanen', 'mika@library.fi'),
+('Sara Niemi', NULL),    
+('Olli Koski', 'olli@gmail.com');
 
 -- loans
-
+INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date) VALUES
+(1, 1, '2024-01-01', '2024-01-15', '2024-01-10'),
+(2, 1, '2024-02-01', '2024-02-15', NULL),
+(1, 2, '2024-01-10', '2024-01-25', '2024-01-20'),
+(3, 2, '2024-03-01', '2024-03-15', NULL),
+(2, 3, '2024-02-10', '2024-02-24', '2024-02-20'),
+(4, 4, '2024-03-10', '2024-03-24', '2024-03-20');
 
 -- fines
+INSERT INTO fines (loan_id, amount, paid) VALUES
+(1, 2.00, TRUE),
+(3, 5.50, FALSE),
+(5, 10.00, TRUE),
+(6, 3.00, FALSE);
 
 ```
 
@@ -168,9 +235,12 @@ Suorita kaksi kyselyä varmistaaksesi, että data on paikallaan:
 
 ```sql
 -- 1. Kaikki sarakkeet yhdestä taulusta
+--Suodatattaa kaikki kirjat books taulusta
+SELECT * FROM books;
 
 
 -- 2. Tietyt sarakkeet toisesta taulusta
+SELECT full_name FROM members;
 
 ```
 
@@ -189,7 +259,9 @@ Perustuu tiedostoon [Materiaalit/06-SQL-perusteet-2.md](../../Materiaalit/06-SQL
 _Odotus: 1 rivi (The Great Novel)._
 
 ```sql
-
+--valitaan julkaisuvuosi taulusta books, toimii.
+SELECT title FROM books
+WHERE publication_year = 2020;
 
 ```
 
@@ -200,7 +272,8 @@ _Odotus: 1 rivi (The Great Novel)._
 _Itsetarkistus: 2 riviä (Mika Virtanen, Olli Koski)._
 
 ```sql
-
+--Tällä suodattaa halutun tuloksen, toimii.
+SELECT email FROM members WHERE email <> 'aino@library.fi';
 
 ```
 
@@ -211,6 +284,9 @@ _Itsetarkistus: 2 riviä (Mika Virtanen, Olli Koski)._
 _Itsetarkistus: 2 riviä (5,50 ja 10,00)._
 
 ```sql
+--suodattaa sakot joiden summa on yli 5.
+SELECT amount FROM fines 
+WHERE amount > 5;
 
 
 ```
@@ -222,7 +298,8 @@ _Itsetarkistus: 2 riviä (5,50 ja 10,00)._
 _Itsetarkistus: 4 riviä._
 
 ```sql
-
+SELECT loans FROM loans
+WHERE book_id = 1 OR book_id =2;
 
 ```
 
@@ -233,7 +310,8 @@ _Itsetarkistus: 4 riviä._
 _Itsetarkistus: 2 riviä (Aino Laine, Sara Niemi)._
 
 ```sql
-
+--Suodattaa oikein.
+SELECT full_name FROM members WHERE member_id IN (1,3);
 
 ```
 
@@ -244,6 +322,7 @@ _Itsetarkistus: 2 riviä (Aino Laine, Sara Niemi)._
 _Itsetarkistus: 3 riviä._
 
 ```sql
+SELECT title FROM books WHERE publication_year BETWEEN 2018 AND 2020;
 
 
 ```
@@ -255,6 +334,8 @@ _Itsetarkistus: 3 riviä._
 _Itsetarkistus: 2 riviä._
 
 ```sql
+--Toimii
+SELECT members FROM members WHERE email LIKE '%@library.fi';
 
 
 ```
@@ -266,6 +347,8 @@ _Itsetarkistus: 2 riviä._
 _Itsetarkistus: 1 rivi (Sara Niemi)._
 
 ```sql
+--TOIMII
+SELECT members FROM members WHERE email IS NULL;
 
 
 ```
@@ -277,7 +360,8 @@ _Itsetarkistus: 1 rivi (Sara Niemi)._
 _Itsetarkistus: 2 riviä._
 
 ```sql
-
+--Toimii
+SELECT loans FROM loans WHERE return_date IS NULL;
 
 ```
 
@@ -290,7 +374,8 @@ _Itsetarkistus: 2 riviä._
 _Itsetarkistus: Ensimmäinen rivi on Web Development (2021), sitten The Great Novel (2020), sitten Databases 101 (2019), sitten Algorithms (2018)._
 
 ```sql
-
+SELECT * FROM books ORDER BY
+publication_year DESC, title ASC; 
 
 ```
 
@@ -301,6 +386,8 @@ _Itsetarkistus: Ensimmäinen rivi on Web Development (2021), sitten The Great No
 _Itsetarkistus: 2 riviä (Web Development, The Great Novel)._
 
 ```sql
+--Toimii
+SELECT * FROM books ORDER BY publication_year DESC LIMIT 2;
 
 
 ```
@@ -314,6 +401,9 @@ _Itsetarkistus: 2 riviä (Web Development, The Great Novel)._
 _Itsetarkistus: 4._
 
 ```sql
+--Toimii
+SELECT COUNT(*) AS books_count
+FROM books;
 
 
 ```
@@ -322,10 +412,11 @@ _Itsetarkistus: 4._
 
 **B3.2** Kuinka monella jäsenellä on sähköposti? Käytä `COUNT(email)`.
 
+
 _Itsetarkistus: 3 (Saralla NULL-sähköposti)._
 
 ```sql
-
+SELECT COUNT(email) AS members_emailcount FROM members;
 
 ```
 
@@ -336,6 +427,7 @@ _Itsetarkistus: 3 (Saralla NULL-sähköposti)._
 _Itsetarkistus: 5,125 (tai 5,13 pyöristyksestä riippuen)._
 
 ```sql
+SELECT AVG(amount) AS avg_velat FROM fines;
 
 
 ```
@@ -347,7 +439,8 @@ _Itsetarkistus: 5,125 (tai 5,13 pyöristyksestä riippuen)._
 _Itsetarkistus: 8,50 (5,50 + 3,00)._
 
 ```sql
-
+--Hienosti toimii
+SELECT SUM(amount) AS saatavat FROM fines WHERE paid = FALSE;
 
 ```
 
@@ -360,6 +453,11 @@ _Itsetarkistus: 8,50 (5,50 + 3,00)._
 _Itsetarkistus: Jäsenellä 1 on 2 lainaa; jäsenillä 2, 3 ja 4 kullakin 1._
 
 ```sql
+SELECT member_id, COUNT(*) AS lainojen_count
+FROM loans
+GROUP BY member_id
+ORDER BY lainojen_count DESC;
+
 
 
 ```
