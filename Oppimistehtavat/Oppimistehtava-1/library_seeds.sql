@@ -1,4 +1,4 @@
-INSERT INTO books (title, isbn, publication_year) VALUES
+INSERT INTO books (title, isbn, publication_year) VALUES --hyvä tehtäväÄ
 ( 'The Great Novel', 978-0-00-000001-1, 2020),
 ( 'Databases', 978-0-00-000002-2, 2019),
 ( 'Web Development',(NULL), 2021),

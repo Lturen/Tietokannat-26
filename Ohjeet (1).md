@@ -469,7 +469,12 @@ ORDER BY lainojen_count DESC;
 _Itsetarkistus: 1 rivi (member_id 1)._
 
 ```sql
-
+--Tässä en voi itsetarkistaa oikein kun oli se problem kun member_id 1 sekä 2, omaavat kaksi lainaa.
+SELECT member_id, COUNT(*) AS lainojen_count
+FROM loans
+GROUP BY member_id
+HAVING COUNT(*) >= 2
+ORDER BY lainojen_count DESC;
 
 ```
 
@@ -480,7 +485,12 @@ _Itsetarkistus: 1 rivi (member_id 1)._
 _Itsetarkistus: Tekijöillä 2 ja 3 on kullakin 2 kirjaa; tekijällä 1 on 2 kirjaa._
 
 ```sql
-
+--Okei tämä ei toimi, kaikilla author-ideillä näkyy olevan yksi kirja.
+SELECT author_id, COUNT(*) AS kirjojen_count
+FROM authors
+GROUP BY author_id
+HAVING COUNT(*) > 0
+ORDER BY kirjojen_count DESC;
 
 ```
 
