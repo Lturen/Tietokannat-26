@@ -15,3 +15,14 @@ CREATE TABLE products (
         REFERENCES categories(id)       -->automaattisen id:n perusteella, joten tuotetta luodettaessa
                                         --> pitää määritellä mihin kategoriaan tuote kuuluu
 );
+
+CREATE TABLE customers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(250) UNIQUE
+
+);
+
+V´CRATE TABLE orders (
+
+);

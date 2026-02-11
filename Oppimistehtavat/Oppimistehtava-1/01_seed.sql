@@ -21,5 +21,5 @@ INSERT INTO products (name, price, stock, category_id) VALUES
 ('Thermal Hiking Socks (2-Pack)', 14.99, 120, 5),
 ('Lampopeitto ', 2000, 5, 1),
 ('Makuupussi ', 150, 10, 3),
-('Retkikeitin ', 80, 15, 4),
+('Retkikeitin ', 80, 15, 4);
 --Tuotteiden lisäys loppuu puolipisteeseen;!

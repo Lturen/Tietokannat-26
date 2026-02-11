@@ -470,6 +470,7 @@ _Itsetarkistus: 1 rivi (member_id 1)._
 
 ```sql
 --Tässä en voi itsetarkistaa oikein kun oli se problem kun member_id 1 sekä 2, omaavat kaksi lainaa.
+--Tehtävän suunnittelijan virhe
 SELECT member_id, COUNT(*) AS lainojen_count
 FROM loans
 GROUP BY member_id
@@ -486,6 +487,7 @@ _Itsetarkistus: Tekijöillä 2 ja 3 on kullakin 2 kirjaa; tekijällä 1 on 2 kir
 
 ```sql
 --Okei tämä ei toimi, kaikilla author-ideillä näkyy olevan yksi kirja.
+--Tässä oli kansa virhe suunnittelijan puolesta.
 SELECT author_id, COUNT(*) AS kirjojen_count
 FROM authors
 GROUP BY author_id
