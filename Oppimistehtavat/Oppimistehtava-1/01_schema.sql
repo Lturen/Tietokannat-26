@@ -12,17 +12,22 @@ CREATE TABLE products (
     price NUMERIC(10,2) NOT NULL,       -- Tarkka hinta (ei liukuluku)
     stock INTEGER NOT NULL,             -- Varastosaldo kokonaislukuna, INTEGER = int.
     category_id INTEGER NOT NULL        -- Viittaus categories-tauluun, siellä oli kategoriat luokiteltu 
-        REFERENCES categories(id)       -->automaattisen id:n perusteella, joten tuotetta luodettaessa
+        REFERENCES categories(category_id)       -->automaattisen id:n perusteella, joten tuotetta luodettaessa
                                         --> pitää määritellä mihin kategoriaan tuote kuuluu
 );
 
-CREATE TABLE customers (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(250) UNIQUE
 
-);
 
-V´CRATE TABLE orders (
 
-);
+
+
+
+
+  
+
+
+
+
+
+
+

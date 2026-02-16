@@ -9,7 +9,7 @@
 
 ## **OSA A — Tietokannan rakentaminen**
 
-Perustuu tiedostoon [Materiaalit/05-SQL-perusteet.md](../../Materiaalit/05-SQL-perusteet.md). Luot tietokannan, kirjoitat kaikki `CREATE TABLE` -lauseet, lisäät esimerkkidatan ja suoritat perus-`SELECT`-kyselyitä tarkistusta varten.
+PeMateriaalit/05-SQL-perusteet.md](../../Materiaalit/05-SQL-perusteet.mdrustuu tiedostoon [). Luot tietokannan, kirjoitat kaikki `CREATE TABLE` -lauseet, lisäät esimerkkidatan ja suoritat perus-`SELECT`-kyselyitä tarkistusta varten.
 
 ---
 
