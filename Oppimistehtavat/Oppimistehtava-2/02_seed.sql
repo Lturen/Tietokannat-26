@@ -12,17 +12,15 @@ INSERT INTO orders (customer_id, order_date) VALUES
 (3, '2024-02-10'),
 (4, '2024-06-03');
 
-INSERT INTO order_items (order_id, order_date, quantity, unit_price) VALUES
-((SELECT order_id FROM orders WHERE order_date = '2024-01-15' AND customer_id = (SELECT id FROM customers WHERE name = 'Emma Virtanen')), 1, 149.99),
-((SELECT order_id FROM orders WHERE order_date = '2024-01-15' AND customer_id = (SELECT id FROM customers WHERE name = 'Emma Virtanen')), 4, 79.95),
-((SELECT order_id FROM orders WHERE order_date = '2024-02-20' AND customer_id = (SELECT id FROM customers WHERE name = 'Emma Virtanen')), 14, 119.00),
-((SELECT order_id FROM orders WHERE order_date = '2024-01-22' AND customer_id = (SELECT id FROM customers WHERE name = 'Jussi Mäkinen')), 7, 129.00),
-((SELECT order_id FROM orders WHERE order_date = '2024-01-22' AND customer_id = (SELECT id FROM customers WHERE name = 'Jussi Mäkinen')), 10, 54.95),
-((SELECT order_id FROM orders WHERE order_date = '2024-02-10' AND customer_id = (SELECT id FROM customers WHERE name = 'Liisa Korhonen')), 15, 14.99),
-((SELECT order_id FROM orders WHERE order_date = '2024-03-01' AND customer_id = (SELECT id FROM customers WHERE name = 'Olli Nieminen')), 11, 24.99),
-((SELECT order_id FROM orders WHERE order_date = '2024-03-01' AND customer_id = (SELECT id FROM customers WHERE name = 'Olli Nieminen')), 12, 19.90);
-
-
+INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES
+(1, 1, 1, 149.99),
+(1, 4, 2, 79.95),
+(2, 14, 1, 119.00),
+(3, 7, 1, 129.00),
+(3, 10, 1, 54.95),
+(4, 15, 3, 14.99),
+(5, 11, 1, 24.99),
+(5, 12, 2, 19.90);
 
 Tilaus 1 (Emma, 2024-01-15): 1× Summit 2P Dome Tent (149,99), 2× Ridgeway 30L Daypack (79,95 kpl)
 Tilaus 2 (Emma, 2024-02-20): 1× RainShell Waterproof Jacket (119,00)
