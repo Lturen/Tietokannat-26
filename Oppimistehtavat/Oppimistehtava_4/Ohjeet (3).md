@@ -42,19 +42,21 @@ Vastaa seuraaviin **`medal_results`** -taulun osalta. Käytä apuna yllä olevaa
 
 **A1.1** **Päivitysanomalia** — Jos Mika Virtasen nimi korjataan (esim. oikeinkirjoitus). Mitä tässä suunnittelussa on tehtävä? Mitä menee vikaan, jos päivitämme vain yhden rivin?
 
-_Vastauksesi:_
+_Vastauksesi:_Jos halutaan päivittää Mika Virtasen nimi vaikkapa, täytyy päivittää jokainen sarake missä Mika Virtanen esiintyy, muussa tapauksessa tauluun jää ns. vanhaa tietoa.
+
+
 
 ---
 
 **A1.2** **Lisäysanomalia** — Haluamme lisätä uuden tapahtuman "Viestikilpailu" maastohiihtoon, paikalle Mountain Resort, Zhangjiakou, ennen kuin kukaan urheilija on kilpaillut siinä. Onnistuuko tämä tällä yhdellä taululla? Selitä lyhyesti.
 
-_Vastauksesi:_
+_Vastauksesi:_Ei varsinaisesti ilman keksittyä tietoa tai sallittuja null arvoja, pitäisi keksiä aika monta char ja int arvoa taulukkoon.
 
 ---
 
 **A1.3** **Poistoanomalia** — Jos poistamme Saralle Niemelle naisten pujottelun tuloksen rivin, mitä tietoa menetämme sen yhden mitalituloksen lisäksi?
 
-_Vastauksesi:_
+_Vastauksesi:_Jos poistetaan Sara Niemen pujottelun tulos, menetetään koko data urheilijasta, koska se on taulukon ainut data hänestä. Olisi järkevää olla urheilija taulussa ilman tuloksiakin.
 
 ---
 
@@ -64,13 +66,13 @@ Taululla `medal_results` on atomiarvot jokaisessa solussa ja pääavain `(athlet
 
 **A2.1** Onko tämä taulu 1NF:ssä? (Kyllä/Ei ja yksi lause miksi.)
 
-_Vastauksesi:_
+_Vastauksesi:_Kyllä, tämä taulukko on 1NF:ssä, taulukossa ei ole sojula jossa voisi esiintyä 2 parametriä yhtä aikaa, esim (County_name = China, Africa).
 
 ---
 
 **A2.2** Oletetaan, että olisimme sen sijaan sarake `events_won`, jossa useita arvoja yhdessä solussa, esim. `"Men's Downhill, Men's 50km"`. Miksi se **ei** olisi 1NF?
 
-_Vastauksesi:_
+_Vastauksesi:_Tällöin solussa esiintyy useampi tietotyyppi, ja taulukko ei ole 1NF:ssä.
 
 ---
 
@@ -80,7 +82,9 @@ _Vastauksesi:_
 
 **A3.1** Mitkä attribuutit riippuvat **vain** `athlete_id`:stä? Mitkä **vain** `event_id`:stä? Mitkä **molemmista** (koko avaimesta)?
 
-_Vastauksesi:_
+_Vastauksesi:_athlete_name, couyntry_code, country_name riippuvat athlete:stä.
+event_name, sport_name, venue_name, city,medal_type riippuvat event_id:stä
+
 
 ---
 
@@ -88,13 +92,15 @@ _Vastauksesi:_
 
 _Vastauksesi:_
 
----
+---Ei täytä, siellä on sarakkeita esim medaö type, jotka eivät liity pääavaimeen.
 
 **A3.3** 2NF:ään päästään jakamalla erillisiin tauluihin. Listaa **taulut**, jotka sinulla olisi, ja kunkin taulun **pääavain**. (Toteutat nämä osassa B.)
 
 _Vastauksesi:_
 
----
+---Tekisin taulut events, ja medal winners.
+2 taulua.
+events taulun pääavain olisi event id. medal winners taulun pääavain olisi yhdistelmä avain, event id sekä cauntry name.
 
 ### A4 — Kolmas normaalimuoto (3NF)
 
@@ -104,7 +110,7 @@ Oletetaan, että tapahtumat olisi jaettu tauluun **`events(event_id, event_name,
 
 _Vastauksesi:_
 
----
+---Sport-id, tämähän se on.
 
 **A4.2** Miten korjaamme sen 3NF:ään? (Nimeä taulut: esim. yksi venues-, yksi events-taulu, jossa vain venue_id.)
 
