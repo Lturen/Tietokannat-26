@@ -92,7 +92,7 @@ event_name, sport_name, venue_name, city,medal_type riippuvat event_id:stä
 
 _Vastauksesi:_
 
----Ei täytä, siellä on sarakkeita esim medaö type, jotka eivät liity pääavaimeen.
+---Ei täytä, siellä on sarakkeita esim medal type, jotka eivät liity pääavaimeen.
 
 **A3.3** 2NF:ään päästään jakamalla erillisiin tauluihin. Listaa **taulut**, jotka sinulla olisi, ja kunkin taulun **pääavain**. (Toteutat nämä osassa B.)
 
@@ -110,11 +110,11 @@ Oletetaan, että tapahtumat olisi jaettu tauluun **`events(event_id, event_name,
 
 _Vastauksesi:_
 
----Sport-id, tämähän se on.
+---venue_name riippuu ei-avainsarakkeesta city.
 
 **A4.2** Miten korjaamme sen 3NF:ään? (Nimeä taulut: esim. yksi venues-, yksi events-taulu, jossa vain venue_id.)
 
-_Vastauksesi:_
+_Vastauksesi: venue_id (venue_name, city) events (event-id(PK),event_name, sport_id, venue_id)
 
 ---
 
