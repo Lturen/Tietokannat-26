@@ -122,7 +122,7 @@ _Vastauksesi: venue_id (venue_name, city) events (event-id(PK),event_name, sport
 
 Kerro **yksi** tilanne, jossa denormalisointia käytetään joskus redundanssiriski huolimatta.
 
-_Vastauksesi:_
+_Vastauksesi: Kyselyjen yksinkertaistamisessa tai suorituskyvyn parantamisessa denormalisointi on hyväksyttävää.
 
 ---
 
@@ -144,7 +144,91 @@ Aja CREATE-lauseesi **transaktion sisällä**: `BEGIN;` … CREATE TABLE -lausee
 BEGIN;
 
 -- CREATE TABLE countries; ... CREATE TABLE results; tähän
+BEGIN;
 
+
+--Sain luotua uudet taulut, oli hyvin herkässä.
+CREATE TABLE countries (
+
+    country_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+country_name VARCHAR (100) NOT NULL UNIQUE,
+
+country_code VARCHAR (3) NOT NULL UNIQUE
+
+);
+
+
+
+CREATE TABLE athletes (
+
+    athlete_id INT NOT NULL,
+
+    athlete_name VARCHAR (100) NOT NULL,
+
+    country_id INT NOT NULL,
+
+    email VARCHAR (200) NULL,
+
+    PRIMARY KEY (athlete_id),
+
+    CONSTRAINT fk_athlete_country FOREIGN KEY (country_id) REFERENCES countries(country_id)
+
+);
+
+CREATE TABLE sports (
+
+    sport_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    sport_name VARCHAR (100) NOT NULL UNIQUE
+
+);
+
+CREATE TABLE venues ( --Tapahtumat
+
+    venue_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    venue_name VARCHAR (100) NOT NULL,
+
+    city VARCHAR (100) NOT NULL
+
+    
+
+);
+
+CREATE TABLE events (
+
+    event_id INT PRIMARY KEY,
+
+    event_name VARCHAR (100) NOT NULL,
+
+    sport_id INT NOT NULL,
+
+    venue_id INT NOT NULL,
+
+    CONSTRAINT fk_event_sport FOREIGN KEY (sport_id) REFERENCES sports(sport_id),
+
+    CONSTRAINT fk_event_venue FOREIGN KEY (venue_id) REFERENCES venues(venue_id)
+
+);
+
+CREATE TABLE results (
+
+    result_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    athlete_id INT NOT NULL,
+
+    event_id INT NOT NULL,
+
+    medal_type VARCHAR(10) NOT NULL,
+
+    CONSTRAINT fk_res_athlete FOREIGN KEY (athlete_id) REFERENCES athletes(athlete_id),
+
+    CONSTRAINT fk_res_event FOREIGN KEY (event_id) REFERENCES events(event_id),
+
+    CONSTRAINT check_medal CHECK (medal_type IN ('gold', 'silver', 'bronze'))
+
+);
 
 COMMIT;
 ```
@@ -155,7 +239,7 @@ COMMIT;
 
 _Vastauksesi:_
 
----
+---Koska tapahtuma voi olla uudestaan samassa kaupungissa samalla nimellä, esim 100m miesten juoksu, mikkeli. Nyt tapahtuma on uniikki (event_id)
 
 ### B2 — Siirrä data transaktion avulla
 
@@ -175,25 +259,47 @@ Kirjoita migraatiosi (kaikki INSERTit) alla olevaan lohkoon. Käytä koko migraa
 ```sql
 BEGIN;
 
--- 1. INSERT INTO countries ...
--- 2. INSERT INTO athletes ... (käytä OVERRIDING SYSTEM VALUE athlete_id:lle)
--- 3. INSERT INTO sports ...
--- 4. INSERT INTO venues ...
--- 5. INSERT INTO events ... (käytä OVERRIDING SYSTEM VALUE event_id:lle, liitä sports- ja venues-tauluihin)
--- 6. INSERT INTO results ...
+INSERT INTO countries (country_code, country_name)
+SELECT DISTINCT country_code, country_name FROM medal_results;
+
+INSERT INTO athletes (athlete_id, athlete_name, country_id)
+OVERRIDING SYSTEM VALUE
+SELECT DISTINCT m.athlete_id, m.athlete_name, c.country_id
+FROM medal_results m
+JOIN countries c ON m.country_code = c.country_code;
+
+INSERT INTO sports (sport_name)
+SELECT DISTINCT sport_name FROM medal_results;
+
+INSERT INTO venues (venue_name, city)
+SELECT DISTINCT venue_name, city
+FROM medal_results;
+
+INSERT INTO events (event_id, event_name, sport_id, venue_id)
+OVERRIDING SYSTEM VALUE
+SELECT DISTINCT m.event_id, m.event_name, s.sport_id, v.venue_id
+FROM medal_results m
+JOIN sports s ON m.sport_name = s.sport_name
+JOIN venues v ON m.venue_name = v.venue_name AND m.city = v.city;
+
+INSERT INTO results (athlete_id, event_id, medal_type)
+SELECT athlete_id, event_id, LOWER(medal_type)
+FROM medal_results;
+
+COMMIT;
 
 -- Tarkista ennen COMMIT:iä:
 -- SELECT COUNT(*) FROM results;  -- pitäisi olla 8
 -- SELECT COUNT(*) FROM athletes;  -- pitäisi olla 6
 
-COMMIT;   -- tai ROLLBACK; jos jotain on vialla
+   -- tai ROLLBACK; jos jotain on vialla
 ```
 
 ---
 
 **B2.2** Miksi on tärkeää ajaa migraatio transaktion sisällä? Yksi lause.
 
-_Vastauksesi:_
+_Vastauksesi: Periaate kaikki tai ei mitään, kerralla purkkiin. Joko kaikki siirretään kerralla, tai virheen sattuessa ei muuteta mitään.
 
 ---
 
@@ -224,9 +330,12 @@ Käytä **normalisoitua** talviolympiatietokantaa (countries, athletes, sports, 
 _Itsetarkistus: `SELECT full_name, email FROM athletes WHERE athlete_id = 2;` näyttää uuden sähköpostin._
 
 ```sql
+        --Toimii
+        UPDATE athletes
+        SET email = 'sara.niemi@olympics.fi'
+        WHERE athlete_id = 2;
 
-
-```
+```  
 
 ---
 
@@ -235,6 +344,10 @@ _Itsetarkistus: `SELECT full_name, email FROM athletes WHERE athlete_id = 2;` n�
 _Itsetarkistus: Yhtään tapahtumaa ei pitäisi olla venue_id = 1 päivityksen jälkeen._
 
 ```sql
+        --juu tarkistus ok.
+        UPDATE events
+        SET venue_id = 3
+        WHERE venue_id = 1;
 
 
 ```
@@ -243,7 +356,7 @@ _Itsetarkistus: Yhtään tapahtumaa ei pitäisi olla venue_id = 1 päivityksen j
 
 **C1.3** (Turvallisuus) Ennen kuin ajat UPDATE:n, joka koskee useita rivejä, mitä pitäisi tehdä ensin? Yksi lause.
 
-_Vastauksesi:_
+_Vastauksesi: Tarkista montaako riviä ehtosi koskee, aja kysely ensin.
 
 ---
 
@@ -254,6 +367,8 @@ _Vastauksesi:_
 _Itsetarkistus: `SELECT * FROM results;` pitäisi näyttää 7 riviä._
 
 ```sql
+        DELETE FROM results
+        WHERE athlete_id = 5 AND event_id = 5;
 
 
 ```
@@ -262,7 +377,7 @@ _Itsetarkistus: `SELECT * FROM results;` pitäisi näyttää 7 riviä._
 
 **C2.2** Jos haluaisimme poistaa kaikki urheilijan 3 tulokset, ajaisimme `DELETE FROM results WHERE athlete_id = 3;`. Ennen sitä mitä pitäisi ajaa ensin ja miksi?
 
-_Vastauksesi:_
+_Vastauksesi: SELECT * FROM results WHERE athlete_id = 3;, Turvallisuus syistä.
 
 ---
 
@@ -278,6 +393,11 @@ Tarvitset uuden `athlete_id`:n tulostariviä varten (esim. käytä ensimmäisen 
 ```sql
 BEGIN;
 
+INSERT INTO athletes (athlete_id, athlete_name, country_id, email)
+VALUES (8, 'Liisa Korhonen', 5, NULL);
+
+INSERT INTO results (athlete_id, event_id, medal_type)
+VALUES (8, 4, 'bronze');
 
 COMMIT;
 ```
@@ -286,7 +406,7 @@ COMMIT;
 
 **C3.2** Yhdellä lauseella: miksi on hyödyllistä laittaa nämä kaksi INSERTiä yhteen transaktioon?
 
-_Vastauksesi:_
+_Vastauksesi: Oliko jokin jäyny ettei voinut olla urheilijaa ilman tuliksia.
 
 ---
 
@@ -296,6 +416,9 @@ _Vastauksesi:_
 
 ```sql
 BEGIN;
+        UPDATE athletes
+        SET email = 'rollback_test@test.com'
+        WHERE athlete_id = 1;
 
 
 ROLLBACK;
@@ -305,7 +428,7 @@ ROLLBACK;
 
 **C4.2** Yhdellä lauseella: mitä ROLLBACK tekee viimeisestä BEGINistä lähtien tehdyille muutoksille?
 
-_Vastauksesi:_
+_Vastauksesi: Hylkää kaikki transaktiossa tehdyt muutokset.
 
 ---
 
@@ -316,7 +439,9 @@ _Vastauksesi:_
 ```sql
 BEGIN;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
+        UPDATE athletes
+        SET email = 'rollback_test@test.com'
+        WHERE athlete_id = 1;
 
 COMMIT;
 ```
@@ -325,7 +450,7 @@ COMMIT;
 
 **C5.2** Milloin voisit valita **REPEATABLE READ**:n oletuksen (READ COMMITTED) sijaan? Yksi lyhyt syy.
 
-_Vastauksesi:_
+_Vastauksesi: Jos joku muukin on tekemässä committia tietokantaan.
 
 ---
 
